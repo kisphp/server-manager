@@ -14,9 +14,9 @@ abstract class DbFactory
      */
     public static function createDatabaseConnection($databaseName = null)
     {
-        $params = self::getDbParameters();
+        $params = static::getDbParameters();
 
-        $db = Kisdb::getInstance();
+        $db = static::instantiateKisdb();
         $db->enableDebug();
         $db->connect(
             $params['database.host'],
@@ -33,7 +33,7 @@ abstract class DbFactory
      */
     public static function getDbParameters()
     {
-        $configContent = self::getConfigParameters();
+        $configContent = static::getConfigParameters();
         $config = Yaml::parse($configContent);
 
         return $config['parameters'];
@@ -47,5 +47,13 @@ abstract class DbFactory
         $parametersPath = realpath(__DIR__ . '/../../../config/parameters.yml');
 
         return file_get_contents($parametersPath);
+    }
+
+    /**
+     * @return Kisdb
+     */
+    protected static function instantiateKisdb()
+    {
+        return Kisdb::getInstance();
     }
 }
