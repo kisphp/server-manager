@@ -22,5 +22,4 @@ class SiteCommand extends Command
     {
         $output->writeln('asd');
     }
-
 }

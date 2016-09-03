@@ -51,7 +51,7 @@ class DatabaseDropCommand extends Command
      */
     protected function createDatabase(OutputInterface $output, $databaseName)
     {
-        $query = sprintf("DROP DATABASE IF EXISTS %s", $databaseName);
+        $query = sprintf('DROP DATABASE IF EXISTS %s', $databaseName);
         $this->db->query($query);
 
         if ($output->isVerbose()) {

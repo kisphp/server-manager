@@ -54,7 +54,7 @@ class DatabaseCreateCommand extends Command
      */
     protected function createDatabase(OutputInterface $output, $databaseName)
     {
-        $query = sprintf("CREATE DATABASE IF NOT EXISTS %s", $databaseName);
+        $query = sprintf('CREATE DATABASE IF NOT EXISTS %s', $databaseName);
         $this->db->query($query);
 
         if ($output->isVerbose()) {
