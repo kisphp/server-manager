@@ -33,9 +33,19 @@ abstract class DbFactory
      */
     public static function getDbParameters()
     {
-        $configPath = realpath(__DIR__ . '/../../../config/parameters.yml');
-        $config = Yaml::parse(file_get_contents($configPath));
+        $configContent = self::getConfigParameters();
+        $config = Yaml::parse($configContent);
 
         return $config['parameters'];
+    }
+
+    /**
+     * @return string
+     */
+    protected static function getConfigParameters()
+    {
+        $parametersPath = realpath(__DIR__ . '/../../../config/parameters.yml');
+
+        return file_get_contents($parametersPath);
     }
 }
