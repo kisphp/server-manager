@@ -70,7 +70,7 @@ abstract class AbstractFactory
     {
         $parametersPath = (static::getRootPath() . '/config/parameters.yml');
 
-        if ($parametersPath === false) {
+        if ($parametersRealPath === false) {
             throw new ParametersNotFoundException(sprintf(
                 '%s not found',
                 $parametersPath
