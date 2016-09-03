@@ -6,7 +6,6 @@ use Kisphp\Core\DbFactory;
 use Kisphp\Kisdb;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -51,7 +50,7 @@ class DatabaseListCommand extends Command
      */
     protected function createGrantsTable(OutputInterface $output)
     {
-        $users = $this->db->query("SELECT `User`, `Host` FROM `user`");
+        $users = $this->db->query('SELECT `User`, `Host` FROM `user`');
         while ($user = $users->fetch(\PDO::FETCH_ASSOC)) {
             $this->getGrantsForUser($user);
         }
@@ -65,7 +64,7 @@ class DatabaseListCommand extends Command
     protected function getGrantsForUser($user)
     {
         $grants = $this->db->query(sprintf(
-            "SHOW GRANTS for %s@%s",
+            'SHOW GRANTS for %s@%s',
             $user['User'],
             $user['Host']
         ));
@@ -99,7 +98,7 @@ class DatabaseListCommand extends Command
     protected function createUsersTable(OutputInterface $output)
     {
         $userList = [];
-        $users = $this->db->query("SELECT `Host`, `Db`, `User` FROM `mysql`.`db`");
+        $users = $this->db->query('SELECT `Host`, `Db`, `User` FROM `mysql`.`db`');
         while ($user = $users->fetch(\PDO::FETCH_ASSOC)) {
             $userList[] = $user;
         }
