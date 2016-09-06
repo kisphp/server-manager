@@ -20,9 +20,9 @@ abstract class AbstractFactory
         $db = static::instantiateKisdb();
         $db->enableDebug();
         $db->connect(
-            $params['database.host'],
-            $params['database.user'],
-            $params['database.pass'],
+            $params['database_host'],
+            $params['database_user'],
+            $params['database_pass'],
             $databaseName
         );
 
@@ -68,7 +68,13 @@ abstract class AbstractFactory
      */
     protected static function getConfigParameters()
     {
-        $parametersPath = (static::getRootPath() . '/config/parameters.yml');
+        $parametersPath = $_SERVER['PWD'] . '/app/config/parameters.yml';
+        $parametersRealPath = realpath($parametersPath);
+        //$parametersPath = (static::getRootPath() . '/config/parameters.yml');
+
+        if ($parametersRealPath !== false) {
+            return file_get_contents($parametersRealPath);
+        }
 
         if ($parametersRealPath === false) {
             throw new ParametersNotFoundException(sprintf(

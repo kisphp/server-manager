@@ -50,7 +50,10 @@ class CommandsCollector
 
         $commands = [];
         foreach ($files as $command) {
-            $className = str_replace('.php', '', $command->getFilename());
+            $className = strstr($command->getRelativePathname(), [
+                '/' => '\\',
+                '.php' => '',
+            ]);
             $commandNamespace = sprintf('Kisphp\\Command\\%s', $className);
 
             $commands[] = new $commandNamespace();
