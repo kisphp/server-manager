@@ -1,7 +1,13 @@
 #!/usr/bin/env php
 <?php
 
-require __DIR__.'/vendor/autoload.php';
+if (is_file($_SERVER['PWD'] . '/vendor/autoload.php')) {
+    require $_SERVER['PWD'] . '/vendor/autoload.php';
+}
+
+if (is_file($_SERVER['PWD'] . '/../autoload.php')) {
+    require $_SERVER['PWD'] . '/../autoload.php';
+}
 
 use Kisphp\Core\CommandsCollector;
 use Kisphp\Core\KisphpApplication;

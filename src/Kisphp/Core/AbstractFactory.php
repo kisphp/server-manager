@@ -2,6 +2,7 @@
 
 namespace Kisphp\Core;
 
+use Kisphp\Exceptions\ParametersNotFoundException;
 use Kisphp\Kisdb;
 use Symfony\Component\Yaml\Yaml;
 
@@ -19,9 +20,9 @@ abstract class AbstractFactory
         $db = static::instantiateKisdb();
         $db->enableDebug();
         $db->connect(
-            $params['database.host'],
-            $params['database.user'],
-            $params['database.pass'],
+            $params['database_host'],
+            $params['database_user'],
+            $params['database_pass'],
             $databaseName
         );
 
@@ -61,13 +62,28 @@ abstract class AbstractFactory
     }
 
     /**
+     * @throws ParametersNotFoundException
+     *
      * @return string
      */
     protected static function getConfigParameters()
     {
-        $parametersPath = (static::getRootPath() . '/config/parameters.yml');
+        $parametersPath = $_SERVER['PWD'] . '/app/config/parameters.yml';
+        $parametersRealPath = realpath($parametersPath);
+        //$parametersPath = (static::getRootPath() . '/config/parameters.yml');
 
-        return file_get_contents($parametersPath);
+        if ($parametersRealPath !== false) {
+            return file_get_contents($parametersRealPath);
+        }
+
+        if ($parametersRealPath === false) {
+            throw new ParametersNotFoundException(sprintf(
+                '%s not found',
+                $parametersPath
+            ));
+        }
+
+        return file_get_contents($parametersRealPath);
     }
 
     /**

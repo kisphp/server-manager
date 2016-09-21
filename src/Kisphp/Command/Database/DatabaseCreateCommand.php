@@ -1,6 +1,6 @@
 <?php
 
-namespace Kisphp\Command;
+namespace Kisphp\Command\Database;
 
 use Kisphp\Core\AbstractFactory;
 use Kisphp\Kisdb;
