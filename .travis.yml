@@ -7,7 +7,7 @@ services:
 before_script:
   - travis_retry composer self-update
 install:
-  - cp config/parameters.yml.test config/parameters.yml
+  - cp app/config/parameters.yml.test app/config/parameters.yml
   - composer install --prefer-dist --no-interaction
 script:
   - phpunit --coverage-clover=coverage.xml
