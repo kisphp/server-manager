@@ -28,8 +28,8 @@ class DatabaseCreateCommand extends Command
         $this->setName(self::COMMAND)
             ->setDescription(self::DESCRIPTION)
             ->addArgument(self::DB_NAME, InputArgument::REQUIRED, 'Database name')
-            ->addArgument(self::DB_USER, InputArgument::REQUIRED, 'Database username')
-            ->addArgument(self::DB_PASS, InputArgument::REQUIRED, 'Database password')
+            ->addArgument(self::DB_USER, InputArgument::OPTIONAL, 'Database username')
+            ->addArgument(self::DB_PASS, InputArgument::OPTIONAL, 'Database password')
         ;
     }
 
@@ -39,7 +39,13 @@ class DatabaseCreateCommand extends Command
 
         $dbName = $input->getArgument(self::DB_NAME);
         $dbUser = $input->getArgument(self::DB_USER);
+        if (empty($dbUser)) {
+            $dbUser = $dbName;
+        }
         $dbPass = $input->getArgument(self::DB_PASS);
+        if (empty($dbPass)) {
+            $dbPass = $dbName;
+        }
 
         $this->db = AbstractFactory::createDatabaseConnection();
 
@@ -69,8 +75,10 @@ class DatabaseCreateCommand extends Command
      */
     protected function createUser(OutputInterface $output, $user, $password)
     {
-        $query = sprintf("CREATE USER IF NOT EXISTS '%s'@'%%' IDENTIFIED BY '%s'", $user, $password);
+        $query = sprintf("CREATE USER '%s'@'%%' IDENTIFIED BY '%s'", $user, $password);
         $this->db->query($query);
+
+        $this->displayError($output);
 
         if ($output->isVerbose()) {
             $output->writeln($query);
@@ -87,8 +95,23 @@ class DatabaseCreateCommand extends Command
         $query = sprintf("GRANT ALL PRIVILEGES ON %s.* TO '%s'@'%%'", $databaseName, $user);
         $this->db->query($query);
 
+        $this->displayError($output);
+
         if ($output->isVerbose()) {
             $output->writeln($query);
+        }
+    }
+
+    /**
+     * @param OutputInterface $output
+     */
+    protected function displayError(OutputInterface $output)
+    {
+        $log = $this->db->getLog()->getLog();
+        $last = end($log);
+
+        if ($last['error_message'] !== null) {
+            $output->writeln('<error>' . $last['error_message'] . '</error>');
         }
     }
 }
