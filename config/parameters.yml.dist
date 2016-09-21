@@ -1,6 +1,0 @@
-parameters:
-  database.host: dev.local
-  database.user: developer
-  database.pass: develop123
-
-  server_path: /home/vagrant/server

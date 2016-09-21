@@ -1,7 +1,0 @@
-imports:
-  - { resource: parameters.yml }
-
-database:
-  host: '%database.host%'
-  user: '%database.user%'
-  pass: '%database.pass%'
