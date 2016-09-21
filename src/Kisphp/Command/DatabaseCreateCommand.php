@@ -2,7 +2,7 @@
 
 namespace Kisphp\Command;
 
-use Kisphp\Core\DbFactory;
+use Kisphp\Core\AbstractFactory;
 use Kisphp\Kisdb;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -41,7 +41,7 @@ class DatabaseCreateCommand extends Command
         $dbUser = $input->getArgument(self::DB_USER);
         $dbPass = $input->getArgument(self::DB_PASS);
 
-        $this->db = DbFactory::createDatabaseConnection();
+        $this->db = AbstractFactory::createDatabaseConnection();
 
         $this->createDatabase($output, $dbName);
         $this->createUser($output, $dbUser, $dbPass);

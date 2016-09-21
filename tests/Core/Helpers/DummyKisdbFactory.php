@@ -2,9 +2,9 @@
 
 namespace tests\Core\Helpers;
 
-use Kisphp\Core\DbFactory;
+use Kisphp\Core\AbstractFactory;
 
-class DummyKisdbFactory extends DbFactory
+class DummyKisdbFactory extends AbstractFactory
 {
     /**
      * @return \Kisphp\Kisdb

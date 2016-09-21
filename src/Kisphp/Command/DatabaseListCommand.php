@@ -2,7 +2,7 @@
 
 namespace Kisphp\Command;
 
-use Kisphp\Core\DbFactory;
+use Kisphp\Core\AbstractFactory;
 use Kisphp\Kisdb;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
@@ -39,7 +39,7 @@ class DatabaseListCommand extends Command
     {
         $output->writeln('<info>' . self::DESCRIPTION . '</info>');
 
-        $this->db = DbFactory::createDatabaseConnection('mysql');
+        $this->db = AbstractFactory::createDatabaseConnection('mysql');
 
         $this->createGrantsTable($output);
         $this->createUsersTable($output);
