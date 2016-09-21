@@ -19,9 +19,9 @@ abstract class AbstractFactory
         $db = static::instantiateKisdb();
         $db->enableDebug();
         $db->connect(
-            $params['database.host'],
-            $params['database.user'],
-            $params['database.pass'],
+            $params['database_host'],
+            $params['database_user'],
+            $params['database_pass'],
             $databaseName
         );
 
@@ -33,7 +33,7 @@ abstract class AbstractFactory
      */
     public static function createTwig()
     {
-        $loader = new \Twig_Loader_Filesystem(realpath(static::getRootPath() . '/config/Resources/templates/'));
+        $loader = new \Twig_Loader_Filesystem(realpath(static::getRootPath() . '/app/Resources/templates/'));
         $twig = new \Twig_Environment($loader, [
             'cache' => false,
         ]);
@@ -65,7 +65,7 @@ abstract class AbstractFactory
      */
     protected static function getConfigParameters()
     {
-        $parametersPath = (static::getRootPath() . '/config/parameters.yml');
+        $parametersPath = (static::getRootPath() . '/app/config/parameters.yml');
 
         return file_get_contents($parametersPath);
     }

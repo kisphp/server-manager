@@ -55,7 +55,7 @@ class SiteCommand extends AbstractSiteCommander
 
         $this->restartApache();
 
-        $this->output->writeln('asd');
+        $this->output->writeln('<info>Site successfully created</info>');
     }
 
     /**
@@ -65,6 +65,8 @@ class SiteCommand extends AbstractSiteCommander
      */
     protected function createProjectDirectory($projectDirectory)
     {
+        $this->comment('Create project directory: ' . $projectDirectory);
+
         return mkdir($projectDirectory, 0755, true);
     }
 
@@ -73,6 +75,8 @@ class SiteCommand extends AbstractSiteCommander
      */
     protected function createVhost($serverPath)
     {
+        $this->comment('Create vhost: ' . $this->input->getArgument('directory'));
+
         $twig = AbstractFactory::createTwig();
 
         $tpl = $twig->loadTemplate('vhost.conf.twig');
@@ -93,6 +97,8 @@ class SiteCommand extends AbstractSiteCommander
 
     protected function restartApache()
     {
+        $this->comment('Restart apache server');
+
         $process = new Process('/etc/init.d/apache2 restart');
         $process->run();
 

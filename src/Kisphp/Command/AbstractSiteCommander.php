@@ -37,4 +37,12 @@ abstract class AbstractSiteCommander extends Command
 
         return 1;
     }
+
+    /**
+     * @param string $message
+     */
+    protected function comment($message)
+    {
+        $this->output->writeln('<comment>' . $message . '</comment>');
+    }
 }
