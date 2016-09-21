@@ -2,7 +2,7 @@
 
 namespace Kisphp\Command;
 
-use Kisphp\Core\DbFactory;
+use Kisphp\Core\AbstractFactory;
 use Kisphp\Kisdb;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -39,7 +39,7 @@ class DatabaseDropCommand extends Command
         $dbName = $input->getArgument(self::DB_NAME);
         $dbUser = $input->getArgument(self::DB_USER);
 
-        $this->db = DbFactory::createDatabaseConnection();
+        $this->db = AbstractFactory::createDatabaseConnection();
 
         $this->createDatabase($output, $dbName);
         $this->dropUser($output, $dbUser);
