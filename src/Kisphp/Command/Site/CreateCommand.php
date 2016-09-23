@@ -3,19 +3,16 @@
 namespace Kisphp\Command\Site;
 
 use Kisphp\Core\AbstractFactory;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Process\Exception\ProcessFailedException;
-use Symfony\Component\Process\Process;
 
 class CreateCommand extends AbstractSiteCommander
 {
     const DESCRIPTION = 'Create new site';
     const COMMAND = 'site:create';
-
-    const APACHE_SITES_AVAILABLE = '/etc/apache2/sites-available/';
-    const APACHE_SITES_ENABLED = '/etc/apache2/sites-enabled/';
 
     protected function configure()
     {
@@ -23,6 +20,7 @@ class CreateCommand extends AbstractSiteCommander
             ->setDescription(self::DESCRIPTION)
             ->addArgument('directory', InputArgument::REQUIRED, 'Set directory name')
             ->addArgument('public_directory', InputArgument::OPTIONAL, 'Set public directory inside project', 'web')
+            ->addOption('activate', 'a', InputOption::VALUE_NONE, 'asd')
         ;
     }
 
@@ -37,7 +35,7 @@ class CreateCommand extends AbstractSiteCommander
         $this->input = $input;
         $this->output = $output;
 
-        $this->executeOnlyForRoot($output);
+        $this->executeOnlyForRoot();
 
         $parameters = AbstractFactory::getParameters();
 
@@ -51,11 +49,11 @@ class CreateCommand extends AbstractSiteCommander
 
         $this->createProjectDirectory($projectDirectory . '/' . $this->input->getArgument('public_directory'));
 
-        $this->createVhost($serverPath);
+        $this->success('Site directory successfully created');
 
-        $this->restartApache();
-
-        $this->output->writeln('<info>Site successfully created</info>');
+        if ($input->getOption('activate')) {
+            $this->callActivateCommand();
+        }
     }
 
     /**
@@ -71,39 +69,20 @@ class CreateCommand extends AbstractSiteCommander
     }
 
     /**
-     * @param $serverPath
+     * @return int
      */
-    protected function createVhost($serverPath)
+    protected function callActivateCommand()
     {
-        $this->comment('Create vhost: ' . $this->input->getArgument('directory'));
+        $command = $this->getApplication()->find(ActivateCommand::COMMAND);
 
-        $twig = AbstractFactory::createTwig();
-
-        $tpl = $twig->loadTemplate('vhost.conf.twig');
-
-        $vhost = $tpl->render([
-            'server_path' => $serverPath,
+        $arguments = [
+            'command' => ActivateCommand::COMMAND,
             'directory' => $this->input->getArgument('directory'),
-            'domain' => $this->input->getArgument('directory'),
             'public_directory' => $this->input->getArgument('public_directory'),
-        ]);
+        ];
 
-        $vhostTarget = self::APACHE_SITES_AVAILABLE . '/' . $this->input->getArgument('directory') . '.conf';
-        $symlinkTarget = self::APACHE_SITES_ENABLED . '/' . $this->input->getArgument('directory') . '.conf';
-        file_put_contents($vhostTarget, $vhost);
+        $greetInput = new ArrayInput($arguments);
 
-        symlink($vhostTarget, $symlinkTarget);
-    }
-
-    protected function restartApache()
-    {
-        $this->comment('Restart apache server');
-
-        $process = new Process('/etc/init.d/apache2 restart');
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
-        }
+        return $command->run($greetInput, $this->output);
     }
 }
