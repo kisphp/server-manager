@@ -50,12 +50,25 @@ class CommandsCollector
 
         $commands = [];
         foreach ($files as $command) {
-            $className = str_replace('.php', '', $command->getFilename());
+            $className = $this->filterClassNamespace($command->getRelativePathname());
             $commandNamespace = sprintf('Kisphp\\Command\\%s', $className);
 
             $commands[] = new $commandNamespace();
         }
 
         return $commands;
+    }
+
+    /**
+     * @param string $namespace
+     *
+     * @return string
+     */
+    protected function filterClassNamespace($namespace)
+    {
+        $namespace = str_replace('.php', '', $namespace);
+        $namespace = str_replace('/', '\\', $namespace);
+
+        return $namespace;
     }
 }

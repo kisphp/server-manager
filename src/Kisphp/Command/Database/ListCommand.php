@@ -1,6 +1,6 @@
 <?php
 
-namespace Kisphp\Command;
+namespace Kisphp\Command\Database;
 
 use Kisphp\Core\AbstractFactory;
 use Kisphp\Kisdb;
@@ -9,7 +9,7 @@ use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class DatabaseListCommand extends Command
+class ListCommand extends Command
 {
     const DB_NAME = 'name';
     const DB_USER = 'user';
