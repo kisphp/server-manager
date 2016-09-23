@@ -1,6 +1,6 @@
 <?php
 
-namespace Kisphp\Command;
+namespace Kisphp\Command\Database;
 
 use Kisphp\Core\AbstractFactory;
 use Kisphp\Kisdb;
@@ -9,14 +9,14 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class DatabaseCreateCommand extends Command
+class DropCommand extends Command
 {
     const DB_NAME = 'name';
     const DB_USER = 'user';
     const DB_PASS = 'pass';
 
-    const DESCRIPTION = 'Create database and user';
-    const COMMAND = 'db:create';
+    const DESCRIPTION = 'Drop database and delete user';
+    const COMMAND = 'db:drop';
 
     /**
      * @var Kisdb
@@ -29,10 +29,13 @@ class DatabaseCreateCommand extends Command
             ->setDescription(self::DESCRIPTION)
             ->addArgument(self::DB_NAME, InputArgument::REQUIRED, 'Database name')
             ->addArgument(self::DB_USER, InputArgument::OPTIONAL, 'Database username')
-            ->addArgument(self::DB_PASS, InputArgument::OPTIONAL, 'Database password')
         ;
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln('<info>' . self::DESCRIPTION . '</info>');
@@ -42,16 +45,11 @@ class DatabaseCreateCommand extends Command
         if (empty($dbUser)) {
             $dbUser = $dbName;
         }
-        $dbPass = $input->getArgument(self::DB_PASS);
-        if (empty($dbPass)) {
-            $dbPass = $dbName;
-        }
 
         $this->db = AbstractFactory::createDatabaseConnection();
 
         $this->createDatabase($output, $dbName);
-        $this->createUser($output, $dbUser, $dbPass);
-        $this->grantUserAccess($output, $dbName, $dbUser);
+        $this->dropUser($output, $dbUser);
     }
 
     /**
@@ -60,7 +58,7 @@ class DatabaseCreateCommand extends Command
      */
     protected function createDatabase(OutputInterface $output, $databaseName)
     {
-        $query = sprintf('CREATE DATABASE IF NOT EXISTS %s', $databaseName);
+        $query = sprintf('DROP DATABASE IF EXISTS %s', $databaseName);
         $this->db->query($query);
 
         if ($output->isVerbose()) {
@@ -71,47 +69,14 @@ class DatabaseCreateCommand extends Command
     /**
      * @param OutputInterface $output
      * @param string $user
-     * @param string $password
      */
-    protected function createUser(OutputInterface $output, $user, $password)
+    protected function dropUser(OutputInterface $output, $user)
     {
-        $query = sprintf("CREATE USER '%s'@'%%' IDENTIFIED BY '%s'", $user, $password);
+        $query = sprintf("DROP USER '%s'@'%%'", $user);
         $this->db->query($query);
-
-        $this->displayError($output);
 
         if ($output->isVerbose()) {
             $output->writeln($query);
-        }
-    }
-
-    /**
-     * @param OutputInterface $output
-     * @param string $databaseName
-     * @param string $user
-     */
-    protected function grantUserAccess(OutputInterface $output, $databaseName, $user)
-    {
-        $query = sprintf("GRANT ALL PRIVILEGES ON %s.* TO '%s'@'%%'", $databaseName, $user);
-        $this->db->query($query);
-
-        $this->displayError($output);
-
-        if ($output->isVerbose()) {
-            $output->writeln($query);
-        }
-    }
-
-    /**
-     * @param OutputInterface $output
-     */
-    protected function displayError(OutputInterface $output)
-    {
-        $log = $this->db->getLog()->getLog();
-        $last = end($log);
-
-        if ($last['error_message'] !== null) {
-            $output->writeln('<error>' . $last['error_message'] . '</error>');
         }
     }
 }

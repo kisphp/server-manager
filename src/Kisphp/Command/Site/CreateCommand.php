@@ -1,6 +1,6 @@
 <?php
 
-namespace Kisphp\Command;
+namespace Kisphp\Command\Site;
 
 use Kisphp\Core\AbstractFactory;
 use Symfony\Component\Console\Input\InputArgument;
@@ -9,7 +9,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
-class SiteCommand extends AbstractSiteCommander
+class CreateCommand extends AbstractSiteCommander
 {
     const DESCRIPTION = 'Create new site';
     const COMMAND = 'site:create';
