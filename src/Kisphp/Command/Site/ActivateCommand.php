@@ -39,7 +39,7 @@ class ActivateCommand extends AbstractSiteCommander
     }
 
     /**
-     * @param $serverPath
+     * @param string $serverPath
      */
     protected function createVhost($serverPath)
     {

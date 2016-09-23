@@ -78,7 +78,7 @@ abstract class AbstractSiteCommander extends Command
      */
     protected function getVhostTarget($directory)
     {
-        return self::APACHE_SITES_AVAILABLE . '/' . $directory . '.conf';
+        return self::APACHE_SITES_AVAILABLE . $directory . '.conf';
     }
 
     /**
@@ -88,6 +88,6 @@ abstract class AbstractSiteCommander extends Command
      */
     protected function getSymlinkTarget($directory)
     {
-        return self::APACHE_SITES_ENABLED . '/' . $directory . '.conf';
+        return self::APACHE_SITES_ENABLED . $directory . '.conf';
     }
 }
