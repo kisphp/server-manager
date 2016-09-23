@@ -28,16 +28,23 @@ class DatabaseDropCommand extends Command
         $this->setName(self::COMMAND)
             ->setDescription(self::DESCRIPTION)
             ->addArgument(self::DB_NAME, InputArgument::REQUIRED, 'Database name')
-            ->addArgument(self::DB_USER, InputArgument::REQUIRED, 'Database username')
+            ->addArgument(self::DB_USER, InputArgument::OPTIONAL, 'Database username')
         ;
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln('<info>' . self::DESCRIPTION . '</info>');
 
         $dbName = $input->getArgument(self::DB_NAME);
         $dbUser = $input->getArgument(self::DB_USER);
+        if (empty($dbUser)) {
+            $dbUser = $dbName;
+        }
 
         $this->db = AbstractFactory::createDatabaseConnection();
 
