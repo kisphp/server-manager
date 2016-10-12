@@ -1,6 +1,0 @@
-# This file is auto-generated during the composer install
-parameters:
-    database_host: ansible.local
-    database_user: developer
-    database_pass: develop123
-    server_path: /home/vagrant/server

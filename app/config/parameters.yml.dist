@@ -1,5 +1,5 @@
 parameters:
-  database_host: dev.local
+  database_host: localhost
   database_user: developer
   database_pass: develop123
 
