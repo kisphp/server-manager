@@ -35,7 +35,9 @@ class CreateCommand extends AbstractSiteCommander
         $this->input = $input;
         $this->output = $output;
 
-        $this->executeOnlyForRoot();
+        if ($input->getOption('activate')) {
+            $this->executeOnlyForRoot();
+        }
 
         $parameters = AbstractFactory::getParameters();
 
