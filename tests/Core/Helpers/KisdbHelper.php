@@ -7,7 +7,7 @@ use Kisphp\Kisdb;
 class KisdbHelper extends Kisdb
 {
     /**
-     * @return boolean
+     * @return bool
      */
     public function isConnected()
     {

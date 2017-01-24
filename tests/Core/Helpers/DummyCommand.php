@@ -15,6 +15,5 @@ class DummyCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-
     }
 }
