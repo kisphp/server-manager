@@ -4,3 +4,4 @@
 config/parameters.yml
 coverage/
 app/config/parameters.yml
+*.cache
