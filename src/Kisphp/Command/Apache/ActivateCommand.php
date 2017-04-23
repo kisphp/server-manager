@@ -1,7 +1,8 @@
 <?php
 
-namespace Kisphp\Command\Site;
+namespace Kisphp\Command\Apache;
 
+use Kisphp\Command\AbstractSiteCommander;
 use Kisphp\Core\AbstractFactory;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -9,7 +10,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ActivateCommand extends AbstractSiteCommander
 {
-    const COMMAND = 'site:activate';
+    const COMMAND = 'apache:activate';
 
     protected function configure()
     {
@@ -33,7 +34,7 @@ class ActivateCommand extends AbstractSiteCommander
 
         $this->createVhost($serverPath);
 
-        $this->restartApache();
+        $this->restartServer();
 
         $this->success('Domain ' . $this->input->getArgument('directory') . ' successfully activated');
     }
@@ -58,8 +59,8 @@ class ActivateCommand extends AbstractSiteCommander
             'public_directory' => $this->input->getArgument('public_directory'),
         ]);
 
-        $vhostTarget = $this->getVhostTarget($directory);
-        $symlinkTarget = $this->getSymlinkTarget($directory);
+        $vhostTarget = $this->getApacheVhostTarget($directory);
+        $symlinkTarget = $this->getApacheSymlinkTarget($directory);
 
         file_put_contents($vhostTarget, $vhost);
 

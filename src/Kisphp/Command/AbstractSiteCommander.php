@@ -1,6 +1,6 @@
 <?php
 
-namespace Kisphp\Command\Site;
+namespace Kisphp\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -12,6 +12,9 @@ abstract class AbstractSiteCommander extends Command
 {
     const APACHE_SITES_AVAILABLE = '/etc/apache2/sites-available/';
     const APACHE_SITES_ENABLED = '/etc/apache2/sites-enabled/';
+
+    const NGINX_SITES_AVAILABLE = '/etc/nginx/sites-available/';
+    const NGINX_SITES_ENABLED = '/etc/nginx/sites-enabled/';
 
     /**
      * @var InputInterface
@@ -26,7 +29,7 @@ abstract class AbstractSiteCommander extends Command
     protected function executeOnlyForRoot()
     {
         if (posix_geteuid() !== 0) {
-            $this->outputError('Please run this command with "sudo"');
+            $this->outputError('Please run this command as "ROOT"');
             die;
         }
     }
@@ -59,12 +62,20 @@ abstract class AbstractSiteCommander extends Command
         $this->output->writeln('<info>' . $message . '</info>');
     }
 
-    protected function restartApache()
+    protected function restartServer()
     {
-        $this->comment('Restart apache server');
+        $commandNamespace = get_called_class();
+        $process = new Process('');
 
-        $process = new Process('/etc/init.d/apache2 restart');
-        $process->run();
+        if (preg_match('/Nginx/', $commandNamespace)) {
+            $this->comment('Restart Nginx server');
+            $process = $this->restartNginx();
+        }
+
+        if (preg_match('/Apache/', $commandNamespace)) {
+            $this->comment('Restart Apache server');
+            $process = $this->restartApache();
+        }
 
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);
@@ -72,11 +83,33 @@ abstract class AbstractSiteCommander extends Command
     }
 
     /**
+     * @return Process
+     */
+    private function restartApache()
+    {
+        $process = new Process('/etc/init.d/apache2 restart');
+        $process->run();
+
+        return $process;
+    }
+
+    /**
+     * @return Process
+     */
+    private function restartNginx()
+    {
+        $process = new Process('/etc/init.d/nginx restart');
+        $process->run();
+
+        return $process;
+    }
+
+    /**
      * @param string $directory
      *
      * @return string
      */
-    protected function getVhostTarget($directory)
+    protected function getApacheVhostTarget($directory)
     {
         return self::APACHE_SITES_AVAILABLE . $directory . '.conf';
     }
@@ -86,8 +119,28 @@ abstract class AbstractSiteCommander extends Command
      *
      * @return string
      */
-    protected function getSymlinkTarget($directory)
+    protected function getApacheSymlinkTarget($directory)
     {
         return self::APACHE_SITES_ENABLED . $directory . '.conf';
+    }
+
+    /**
+     * @param string $directory
+     *
+     * @return string
+     */
+    protected function getNginxVhostTarget($directory)
+    {
+        return self::NGINX_SITES_AVAILABLE . $directory;
+    }
+
+    /**
+     * @param string $directory
+     *
+     * @return string
+     */
+    protected function getNginxSymlinkTarget($directory)
+    {
+        return self::NGINX_SITES_ENABLED . $directory;
     }
 }

@@ -1,7 +1,8 @@
 <?php
 
-namespace Kisphp\Command\Site;
+namespace Kisphp\Command;
 
+use Kisphp\Command\AbstractSiteCommander;
 use Kisphp\Core\AbstractFactory;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
@@ -9,7 +10,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CreateCommand extends AbstractSiteCommander
+class SiteCreateCommand extends AbstractSiteCommander
 {
     const DESCRIPTION = 'Create new site';
     const COMMAND = 'site:create';
@@ -28,7 +29,7 @@ class CreateCommand extends AbstractSiteCommander
      * @param InputInterface $input
      * @param OutputInterface $output
      *
-     * @return void|int
+     * @return void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -46,16 +47,14 @@ class CreateCommand extends AbstractSiteCommander
         $projectDirectory = $serverPath . '/' . $this->input->getArgument('directory');
 
         if (is_dir($projectDirectory)) {
-            return $this->outputError('Directory ' . $this->input->getArgument('directory') . ' already exists');
+            $this->outputError('Directory ' . $this->input->getArgument('directory') . ' already exists');
+
+            return;
         }
 
         $this->createProjectDirectory($projectDirectory . '/' . $this->input->getArgument('public_directory'));
 
         $this->success('Site directory successfully created');
-
-        if ($input->getOption('activate')) {
-            $this->callActivateCommand();
-        }
     }
 
     /**
@@ -68,23 +67,5 @@ class CreateCommand extends AbstractSiteCommander
         $this->comment('Create project directory: ' . $projectDirectory);
 
         return mkdir($projectDirectory, 0755, true);
-    }
-
-    /**
-     * @return int
-     */
-    protected function callActivateCommand()
-    {
-        $command = $this->getApplication()->find(ActivateCommand::COMMAND);
-
-        $arguments = [
-            'command' => ActivateCommand::COMMAND,
-            'directory' => $this->input->getArgument('directory'),
-            'public_directory' => $this->input->getArgument('public_directory'),
-        ];
-
-        $greetInput = new ArrayInput($arguments);
-
-        return $command->run($greetInput, $this->output);
     }
 }

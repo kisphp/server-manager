@@ -1,14 +1,15 @@
 <?php
 
-namespace Kisphp\Command\Site;
+namespace Kisphp\Command\Nginx;
 
+use Kisphp\Command\AbstractSiteCommander;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class DeactivateCommand extends AbstractSiteCommander
 {
-    const COMMAND = 'site:deactivate';
+    const COMMAND = 'nginx:deactivate';
 
     protected function configure()
     {
@@ -21,6 +22,8 @@ class DeactivateCommand extends AbstractSiteCommander
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
+     *
+     * @return void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -31,7 +34,7 @@ class DeactivateCommand extends AbstractSiteCommander
 
         $this->removeVhost();
 
-        $this->restartApache();
+        $this->restartServer();
 
         $this->success('Domain ' . $this->input->getArgument('directory') . ' successfully deactivated');
     }
@@ -42,8 +45,8 @@ class DeactivateCommand extends AbstractSiteCommander
 
         $directory = $this->input->getArgument('directory');
 
-        $vhostTarget = $this->getVhostTarget($directory);
-        $symlinkTarget = $this->getSymlinkTarget($directory);
+        $vhostTarget = $this->getNginxVhostTarget($directory);
+        $symlinkTarget = $this->getNginxSymlinkTarget($directory);
 
         if (is_file($symlinkTarget)) {
             $this->success('Remove symlink: ' . $symlinkTarget);
