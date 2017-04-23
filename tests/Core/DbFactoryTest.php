@@ -3,14 +3,14 @@
 namespace tests\Core;
 
 use Kisphp\Core\AbstractFactory;
+use Kisphp\Core\Kisdb;
 use tests\Core\Helpers\DummyKisdbFactory;
-use tests\Core\Helpers\KisdbHelper;
 
 class DbFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function test_success_connection()
     {
-        /** @var KisdbHelper $db */
+        /** @var Kisdb $db */
         $db = DummyKisdbFactory::createDatabaseConnection();
 
         self::assertTrue($db->isConnected());

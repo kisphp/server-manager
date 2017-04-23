@@ -47,7 +47,11 @@ class CreateCommand extends Command
             $dbPass = $dbName;
         }
 
-        $this->db = AbstractFactory::createDatabaseConnection();
+        $this->db = AbstractFactory::createDatabaseConnection(null);
+
+        if ($this->db === false) {
+            return;
+        }
 
         $this->createDatabase($output, $dbName);
         $this->createUser($output, $dbUser, $dbPass);

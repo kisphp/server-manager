@@ -46,7 +46,11 @@ class DropCommand extends Command
             $dbUser = $dbName;
         }
 
-        $this->db = AbstractFactory::createDatabaseConnection();
+        $this->db = AbstractFactory::createDatabaseConnection(null);
+
+        if ($this->db === false) {
+            return;
+        }
 
         $this->createDatabase($output, $dbName);
         $this->dropUser($output, $dbUser);

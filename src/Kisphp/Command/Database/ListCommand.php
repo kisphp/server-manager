@@ -41,6 +41,12 @@ class ListCommand extends Command
 
         $this->db = AbstractFactory::createDatabaseConnection('mysql');
 
+        if ($this->db->isConnected() === false) {
+            $output->writeln('<error>Database connection failed</error>');
+
+            return false;
+        }
+
         $this->createGrantsTable($output);
         $this->createUsersTable($output);
     }

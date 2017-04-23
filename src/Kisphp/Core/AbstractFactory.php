@@ -2,7 +2,6 @@
 
 namespace Kisphp\Core;
 
-use Kisphp\Kisdb;
 use Symfony\Component\Yaml\Yaml;
 
 abstract class AbstractFactory

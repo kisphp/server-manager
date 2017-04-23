@@ -3,6 +3,7 @@
 namespace tests\Core\Helpers;
 
 use Kisphp\Core\AbstractFactory;
+use Kisphp\Core\Kisdb;
 
 class DummyKisdbFactory extends AbstractFactory
 {
@@ -11,6 +12,6 @@ class DummyKisdbFactory extends AbstractFactory
      */
     protected static function instantiateKisdb()
     {
-        return KisdbHelper::getInstance();
+        return Kisdb::getInstance();
     }
 }
