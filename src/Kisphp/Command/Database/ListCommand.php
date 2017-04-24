@@ -35,6 +35,12 @@ class ListCommand extends Command
         ;
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     *
+     * @return void
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln('<info>' . self::DESCRIPTION . '</info>');
@@ -44,11 +50,12 @@ class ListCommand extends Command
         if ($this->db->isConnected() === false) {
             $output->writeln('<error>Database connection failed</error>');
 
-            return false;
+            return;
         }
 
         $this->createGrantsTable($output);
         $this->createUsersTable($output);
+        $this->createDatabasesListTable($output);
     }
 
     /**
@@ -127,6 +134,40 @@ class ListCommand extends Command
             ])
             ->setRows(
                 $userList
+            )
+        ;
+
+        $table->render();
+    }
+
+    /**
+     * @param OutputInterface $output
+     */
+    protected function createDatabasesListTable(OutputInterface $output)
+    {
+        $query = $this->db->query('SHOW DATABASES');
+
+        $databases = [];
+        while ($db = $query->fetch(\PDO::FETCH_ASSOC)) {
+            $databases[] = $db;
+        }
+
+        $this->renderDatabasesTable($output, $databases);
+    }
+
+    /**
+     * @param OutputInterface $output
+     * @param array $databases
+     */
+    protected function renderDatabasesTable(OutputInterface $output, array $databases)
+    {
+        $table = new Table($output);
+        $table
+            ->setHeaders([
+                'Databases List',
+            ])
+            ->setRows(
+                $databases
             )
         ;
 
