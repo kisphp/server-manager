@@ -11,7 +11,7 @@ The purpose of this repository is to allow an easy management of database and we
 ## Commands:
 
 | Command | Shortcut | Description |
-| --- | --- |
+| ------- | -------- | ----------- |
 | `./kisphp db:list` | `./kisphp d:l` | list databases and permissions |
 | `./kisphp db:create database_name [database_user] [database_pass]` | `./kisphp d:c` | create database and user |
 | `./kisphp db:drop database_name` | `./kisphp d:d` | drop database and user |
