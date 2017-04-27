@@ -3,4 +3,4 @@ parameters:
   database_user: developer
   database_pass: develop123
 
-  server_path: /home/vagrant/server
+  server_path: /home/server

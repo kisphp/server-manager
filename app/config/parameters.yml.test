@@ -3,4 +3,4 @@ parameters:
   database_user: root
   database_pass: ~
 
-  server_path: /home/vagrant/server
+  server_path: /home/server
