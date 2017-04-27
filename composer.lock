@@ -949,16 +949,16 @@
         },
         {
             "name": "friendsofphp/php-cs-fixer",
-            "version": "v2.3.0",
+            "version": "v2.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/PHP-CS-Fixer.git",
-                "reference": "ab8c61329ddd896e287a84c7663d06cf1bed3907"
+                "reference": "d5257f7433bb490299c4f300d95598fd911a8ab0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/ab8c61329ddd896e287a84c7663d06cf1bed3907",
-                "reference": "ab8c61329ddd896e287a84c7663d06cf1bed3907",
+                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/d5257f7433bb490299c4f300d95598fd911a8ab0",
+                "reference": "d5257f7433bb490299c4f300d95598fd911a8ab0",
                 "shasum": ""
             },
             "require": {
@@ -1022,7 +1022,7 @@
                 }
             ],
             "description": "A tool to automatically fix PHP code style",
-            "time": "2017-04-21T17:17:40+00:00"
+            "time": "2017-04-25T20:50:30+00:00"
         },
         {
             "name": "ircmaxell/password-compat",
