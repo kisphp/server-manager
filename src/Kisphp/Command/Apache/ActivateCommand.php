@@ -40,7 +40,8 @@ class ActivateCommand extends AbstractSiteCommander
     }
 
     /**
-     * @param string $serverPath
+     * @param $serverPath
+     * @throws \Twig_Error_Loader
      */
     protected function createVhost($serverPath)
     {
@@ -48,7 +49,7 @@ class ActivateCommand extends AbstractSiteCommander
 
         $twig = AbstractFactory::createTwig();
 
-        $tpl = $twig->loadTemplate('vhost.conf.twig');
+        $tpl = $twig->loadTemplate('apache/vhost.conf.twig');
 
         $directory = $this->input->getArgument('directory');
 
