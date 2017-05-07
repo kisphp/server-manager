@@ -41,6 +41,7 @@ class ActivateCommand extends AbstractSiteCommander
 
     /**
      * @param $serverPath
+     *
      * @throws \Twig_Error_Loader
      */
     protected function createVhost($serverPath)
