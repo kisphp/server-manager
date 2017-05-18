@@ -76,7 +76,7 @@ class ActivateCommand extends AbstractSiteCommander
             return false;
         }
 
-        $vhost = $twig->render('nginx/vhost.twig', $params);
+        $vhost = $twig->render('nginx/vhost-dev.twig', $params);
 
         $vhostTarget = $this->getNginxVhostTarget($directory);
         $symlinkTarget = $this->getNginxSymlinkTarget($directory);
