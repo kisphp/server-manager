@@ -3,6 +3,8 @@
     "description": "Web server manager application",
     "keywords": ["kisphp", "server", "manager", "server manager"],
     "license": "MIT",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "authors": [
         {
             "name": "Marius Rizac",
@@ -22,8 +24,8 @@
     "require": {
         "php": ">=7.0",
         "guzzlehttp/guzzle": "~6.0",
-        "symfony/console": "~3.2",
-        "symfony/process": "~3.2",
+        "symfony/console": "~3.4",
+        "symfony/process": "~3.4",
         "symfony/yaml": "~3.2",
         "symfony/finder": "~3.2",
         "twig/twig": "~2.0",
@@ -32,9 +34,8 @@
     },
     "require-dev": {
         "symfony/var-dumper": "^3.0",
-        "friendsofphp/php-cs-fixer": "~2.0",
         "sllh/composer-versions-check": "~2.0",
-        "phpunit/phpunit": "~5.5"
+        "phpunit/phpunit": "~6.3"
     },
     "bin": [
         "kisphp"

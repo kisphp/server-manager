@@ -28,10 +28,10 @@ abstract class AbstractSiteCommander extends Command
 
     protected function executeOnlyForRoot()
     {
-        if (posix_geteuid() !== 0) {
-            $this->outputError('Please run this command as "ROOT"');
-            die;
-        }
+//        if (posix_geteuid() !== 0) {
+//            $this->outputError('Please run this command as "ROOT"');
+//            die;
+//        }
     }
 
     /**
@@ -65,30 +65,28 @@ abstract class AbstractSiteCommander extends Command
     protected function restartServer()
     {
         $commandNamespace = get_called_class();
-        $process = new Process('');
-
         if (preg_match('/Nginx/', $commandNamespace)) {
             $this->comment('Restart Nginx server');
-            $process = $this->restartNginx();
+            $this->restartNginx();
         }
 
         if (preg_match('/Apache/', $commandNamespace)) {
             $this->comment('Restart Apache server');
-            $process = $this->restartApache();
-        }
-
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
+            $this->restartApache();
         }
     }
 
     /**
      * @return Process
      */
-    private function restartApache()
+    protected function restartApache()
     {
-        $process = new Process('/etc/init.d/apache2 restart');
+        $process = new Process('sudo /etc/init.d/apache2 restart');
         $process->run();
+
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
 
         return $process;
     }
@@ -96,10 +94,14 @@ abstract class AbstractSiteCommander extends Command
     /**
      * @return Process
      */
-    private function restartNginx()
+    protected function restartNginx()
     {
-        $process = new Process('/etc/init.d/nginx restart');
+        $process = new Process('sudo /etc/init.d/nginx restart');
         $process->run();
+
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
 
         return $process;
     }
