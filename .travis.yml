@@ -9,7 +9,7 @@ before_script:
 install:
   - cp app/config/parameters.yml.test app/config/parameters.yml
   - composer install --prefer-dist --no-interaction
-  - mkdir _fix && cd _fix && echo '{}' > composer.json
+  - mkdir _fix && cd _fix && echo '{}' > composer.json && cd ..
   - composer require friendsofphp/php-cs-fixer
 script:
   - vendor/bin/phpunit --coverage-clover=coverage.xml
