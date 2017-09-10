@@ -49,7 +49,7 @@ class ServerCleanCommand extends AbstractSiteCommander
         try {
             $dir = new \DirectoryIterator($serverPath);
         } catch (\UnexpectedValueException $e) {
-            return $output->writeln('<error>'.$e->getMessage().'</error>');
+            return $output->writeln('<error>' . $e->getMessage() . '</error>');
         }
 
         foreach ($dir as $fileInfo) {
