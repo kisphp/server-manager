@@ -11,3 +11,4 @@ c:
 	echo '{}' > _fix/composer.json
 	cd _fix && composer require friendsofphp/php-cs-fixer
 	_fix/vendor/bin/php-cs-fixer fix -v
+	rm -rf _fix

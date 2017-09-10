@@ -8,6 +8,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
+/**
+ * @deprecated
+ */
 abstract class AbstractSiteCommander extends Command
 {
     const APACHE_SITES_AVAILABLE = '/etc/apache2/sites-available/';
