@@ -4,10 +4,11 @@ namespace tests\Core;
 
 use Kisphp\Core\CommandsCollector;
 use Kisphp\Core\KisphpApplication;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use tests\Core\Helpers\DummyCommand;
 
-class KisphpApplicationTest extends \PHPUnit_Framework_TestCase
+class KisphpApplicationTest extends TestCase
 {
     public function test_application()
     {

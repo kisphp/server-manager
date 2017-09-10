@@ -4,9 +4,10 @@ namespace tests\Core;
 
 use Kisphp\Core\AbstractFactory;
 use Kisphp\Core\Kisdb;
+use PHPUnit\Framework\TestCase;
 use tests\Core\Helpers\DummyKisdbFactory;
 
-class DbFactoryTest extends \PHPUnit_Framework_TestCase
+class DbFactoryTest extends TestCase
 {
     public function test_success_connection()
     {
