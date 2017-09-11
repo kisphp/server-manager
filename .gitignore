@@ -5,3 +5,6 @@ config/parameters.yml
 coverage/
 app/config/parameters.yml
 *.cache
+coverage
+coverage.xml
+_fix

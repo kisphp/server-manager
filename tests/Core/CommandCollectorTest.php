@@ -3,9 +3,10 @@
 namespace tests\Core;
 
 use Kisphp\Core\CommandsCollector;
+use PHPUnit\Framework\TestCase;
 use tests\Core\Helpers\DummyCommand;
 
-class CommandCollectorTest extends \PHPUnit_Framework_TestCase
+class CommandCollectorTest extends TestCase
 {
     public function test_CommandsCollector()
     {

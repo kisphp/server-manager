@@ -4,6 +4,7 @@ $header = 'code sniffer';
 
 return PhpCsFixer\Config::create()
     ->setRiskyAllowed(true)
+    ->setUsingCache(false)
     ->setRules(array(
         '@PSR2' => true,
         'binary_operator_spaces' => array(

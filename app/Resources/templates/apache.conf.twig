@@ -1,0 +1,35 @@
+<VirtualHost *:80>
+    ServerAdmin webmaster@{{ domain }}
+
+    ServerName {{ domain }}
+    ServerAlias www.{{ domain }}
+
+    DocumentRoot {{ server_path }}/{{ directory }}/{{ public_directory }}
+
+    <Directory />
+        Options FollowSymLinks
+        AllowOverride All
+    </Directory>
+
+    <Directory {{ server_path }}/{{ directory }}/{{ public_directory }}/>
+        Options Indexes FollowSymLinks MultiViews
+        AllowOverride All
+        Order allow,deny
+        allow from all
+    </Directory>
+
+    ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/
+    <Directory "/usr/lib/cgi-bin">
+        AllowOverride All
+        Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
+        Order allow,deny
+        Allow from all
+    </Directory>
+
+    ErrorLog {{ server_path }}/{{ directory }}/error.log
+
+    # Possible values include: debug, info, notice, warn, error, crit, alert, emerg.
+    LogLevel warn
+
+    CustomLog {{ server_path }}/{{ directory }}/access.log combined
+</VirtualHost>
