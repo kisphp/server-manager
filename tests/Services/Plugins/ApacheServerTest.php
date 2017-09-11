@@ -2,12 +2,11 @@
 
 namespace tests\Services\Plugins;
 
-use Kisphp\Services\ServerFactory;
-use Mockery\Mock;
+use Kisphp\Services\Server\Plugins\ApacheServer;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Console\Input\ArrayInput;
+use tests\Helpers\OutputHelper;
+use tests\Helpers\FileSystem;
 
 class ApacheServerTest extends TestCase
 {
@@ -15,22 +14,15 @@ class ApacheServerTest extends TestCase
 
     public function test_cmd()
     {
-        $inputDouble = $this->prophesize(InputInterface::class);
-        $inputDouble->getArgument('directory')->willReturn('app.dev');
-        $inputDouble->getArgument('public_directory')->willReturn('web');
-        $input = $inputDouble->reveal();
+        $input = new ArrayInput([
+            'directory' => 'app.local',
+            'public_directory' => 'web',
+        ]);
 
-        $outputDouble = $this->prophesize(OutputInterface::class);
-        $output = $outputDouble->reveal();
+        $output = new OutputHelper();
 
-        $fsDouble = $this->prophesize(Filesystem::class);
+        $server = new ApacheServer($input, $output, new FileSystem());
 
-        $fs = $fsDouble->reveal();
-
-        $factory = new ServerFactory('apache2', $input, $output, $fs);
-
-        $factory->getServer()->createVhost(self::SERVER_PATH);
-
-        self::assertNotEmpty('ad');
+        $server->createVhost(self::SERVER_PATH);
     }
 }

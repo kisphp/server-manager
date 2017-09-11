@@ -14,6 +14,8 @@ abstract class AbstractServerManager
 
     const VHOST_TPL = '';
 
+    const SERVER_NAME = '';
+
     /**
      * @var InputInterface
      */
@@ -41,6 +43,9 @@ abstract class AbstractServerManager
         $this->fs = $fs;
     }
 
+    /**
+     * @param string $serverPath
+     */
     public function createVhost($serverPath)
     {
         $vhost = $this->generateVhostFile($serverPath);
@@ -48,36 +53,61 @@ abstract class AbstractServerManager
         $directory = $this->input->getArgument('directory');
 
         $vhostTarget = $this->createServerVhostTarget($directory);
-        $symlinkTarget = '';
+        $symlinkTarget = $this->createSymlinkTarget($directory);
 
-        $this->output->writeln($vhostTarget);
-        $this->output->writeln($symlinkTarget);
-
+        $this->output->writeln('Create Vhost: <info>' .$vhostTarget . '</info>');
         $this->fs->dumpFile($vhostTarget, $vhost);
+        $this->output->writeln('Create Symlink: <info>' .$symlinkTarget . '</info>');
         $this->fs->symlink($vhostTarget, $symlinkTarget);
-    }
-
-    protected function createServerVhostTarget($directory)
-    {
-        return static::SITES_AVAILABLE . $directory . '.conf';
-    }
-
-    protected function createSymlinkTarget($directory)
-    {
-        return static::SITES_ENABLED . $directory . 'conf';
-    }
-
-    protected function createVhostName($directory)
-    {
-        return '--asd--';
     }
 
     public function removeVhost()
     {
+
     }
 
+    /**
+     * @return string
+     */
     public function restartServer()
     {
+        return '/etc/init.d/' . static::SERVER_NAME . ' restart';
+    }
+
+    /**
+     * @param string $directory
+     *
+     * @return string
+     */
+    protected function createServerVhostTarget($directory)
+    {
+        $trans = [
+            'apache' => $directory,
+            'nginx' => $directory,
+            '.twig' => '',
+        ];
+
+        $hostFile = str_replace(array_keys($trans), $trans, static::VHOST_TPL);
+
+        return static::SITES_AVAILABLE . $hostFile;
+    }
+
+    /**
+     * @param string $directory
+     *
+     * @return string
+     */
+    protected function createSymlinkTarget($directory)
+    {
+        $trans = [
+            'apache' => $directory,
+            'nginx' => $directory,
+            '.twig' => '',
+        ];
+
+        $hostFile = str_replace(array_keys($trans), $trans, static::VHOST_TPL);
+
+        return static::SITES_ENABLED . $hostFile;
     }
 
     /**
