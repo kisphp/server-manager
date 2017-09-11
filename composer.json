@@ -30,13 +30,12 @@
         "symfony/finder": "~3.2",
         "twig/twig": "~2.0",
         "kisphp/database": "^2.0",
-        "incenteev/composer-parameter-handler": "~2.1"
+        "incenteev/composer-parameter-handler": "~2.1",
+        "symfony/filesystem": "^3.3"
     },
     "require-dev": {
         "symfony/var-dumper": "^3.0",
-        "sllh/composer-versions-check": "~2.0",
-        "phpunit/phpunit": "~6.3",
-        "mockery/mockery": "^0.9.9"
+        "phpunit/phpunit": "~6.3"
     },
     "bin": [
         "kisphp"

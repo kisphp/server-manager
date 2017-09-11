@@ -5,6 +5,7 @@ namespace Kisphp\Services\Server;
 use Kisphp\Core\AbstractFactory;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
 abstract class AbstractServerManager
 {
@@ -24,39 +25,36 @@ abstract class AbstractServerManager
     protected $output;
 
     /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
+     * @var Filesystem
      */
-    public function __construct(InputInterface $input, OutputInterface $output)
+    protected $fs;
+
+    /**
+     * @param \Symfony\Component\Console\Input\InputInterface $input
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @param \Symfony\Component\Filesystem\Filesystem $fs
+     */
+    public function __construct(InputInterface $input, OutputInterface $output, Filesystem $fs)
     {
         $this->input = $input;
         $this->output = $output;
+        $this->fs = $fs;
     }
 
     public function createVhost($serverPath)
     {
-        $twig = AbstractFactory::createTwig();
+        $vhost = $this->generateVhostFile($serverPath);
 
         $directory = $this->input->getArgument('directory');
-        $publicDirectory = $this->input->getArgument('public_directory');
-
-        $vhost = $twig->render('template', [
-            'server_path' => $serverPath,
-            'directory' => $directory,
-            'domain' => $directory,
-            'public_directory' => $publicDirectory,
-        ]);
 
         $vhostTarget = $this->createServerVhostTarget($directory);
         $symlinkTarget = '';
 
-        file_put_contents($vhostTarget, $vhost);
+        $this->output->writeln($vhostTarget);
+        $this->output->writeln($symlinkTarget);
 
-        if (is_file($symlinkTarget)) {
-            unlink($symlinkTarget);
-        }
-
-        symlink($vhostTarget, $symlinkTarget);
+        $this->fs->dumpFile($vhostTarget, $vhost);
+        $this->fs->symlink($vhostTarget, $symlinkTarget);
     }
 
     protected function createServerVhostTarget($directory)
@@ -76,11 +74,31 @@ abstract class AbstractServerManager
 
     public function removeVhost()
     {
-
     }
 
     public function restartServer()
     {
+    }
 
+    /**
+     * @param string $serverPath
+     *
+     * @return string
+     */
+    private function generateVhostFile($serverPath)
+    {
+        $twig = AbstractFactory::createTwig();
+
+        $directory = $this->input->getArgument('directory');
+        $publicDirectory = $this->input->getArgument('public_directory');
+
+        $vhostFileContent = $twig->render(static::VHOST_TPL, [
+            'server_path' => $serverPath,
+            'directory' => $directory,
+            'domain' => $directory,
+            'public_directory' => $publicDirectory,
+        ]);
+
+        return $vhostFileContent;
     }
 }
