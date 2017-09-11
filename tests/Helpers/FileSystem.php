@@ -6,7 +6,15 @@ use Symfony\Component\Filesystem\Filesystem as BaseFileSystem;
 
 class FileSystem extends BaseFilesystem
 {
+    /**
+     * @var array
+     */
     protected $cmds = [];
+
+    /**
+     * @var string
+     */
+    protected $fileContent;
 
     public function copy($originFile, $targetFile, $overwriteNewerFiles = false)
     {
@@ -97,13 +105,18 @@ class FileSystem extends BaseFilesystem
             'method' => __METHOD__,
             'filename' => $filename,
         ];
+        $this->fileContent = $content;
     }
 
     public function appendToFile($filename, $content)
     {
-        $this->cmds[] = [
-            'method' => __METHOD__,
-            'filename' => $filename,
-        ];
+    }
+
+    /**
+     * @return string
+     */
+    public function getFileContent()
+    {
+        return $this->fileContent;
     }
 }

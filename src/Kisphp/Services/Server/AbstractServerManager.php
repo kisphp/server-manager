@@ -44,6 +44,14 @@ abstract class AbstractServerManager
     }
 
     /**
+     * @return \Symfony\Component\Filesystem\Filesystem
+     */
+    public function getFs()
+    {
+        return $this->fs;
+    }
+
+    /**
      * @param string $serverPath
      */
     public function createVhost($serverPath)

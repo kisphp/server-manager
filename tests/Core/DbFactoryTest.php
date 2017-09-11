@@ -9,7 +9,7 @@ use tests\Core\Helpers\DummyKisdbFactory;
 
 class DbFactoryTest extends TestCase
 {
-    public function test_success_connection()
+    public function _test_success_connection()
     {
         /** @var Kisdb $db */
         $db = DummyKisdbFactory::createDatabaseConnection();
