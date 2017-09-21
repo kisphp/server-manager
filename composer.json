@@ -39,6 +39,11 @@
     "bin": [
         "kisphp"
     ],
+    "config": {
+        "platform": {
+            "php": "7.0.9"
+        }
+    },
     "scripts": {
         "kisphp-scripts": [
             "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters"
