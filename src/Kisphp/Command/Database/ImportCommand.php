@@ -8,6 +8,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
 class ImportCommand extends Command
@@ -51,19 +52,18 @@ class ImportCommand extends Command
             return;
         }
 
-        $params = AbstractFactory::getParameters();
-
-        $command = '/usr/bin/mysql -h' . $params['database_host'];
-        $command .= ' -u' . $params['database_user'];
-        if (!empty($params['database_pass'])) {
-            $command .= ' -p' . $params['database_pass'];
-        }
-        $command .= ' ' . $params['database_name'];
-        $command .= ' < ' . $filename;
+        $command = AbstractFactory::createMysqlImportCommand($dbName, $filename);
 
         $process = new Process($command);
         $process->run();
 
+        if (!$process->isSuccessful()) {
+            $output->writeln('<error>' . $process->getErrorOutput() . '</error>');
+            return;
+        }
+
         $output->writeln(sprintf('Imported database <info>%s</info>', $dbName));
+
+        $output->writeln($process->getOutput());
     }
 }

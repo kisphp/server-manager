@@ -6,6 +6,10 @@ use Symfony\Component\Yaml\Yaml;
 
 abstract class AbstractFactory
 {
+    const DATABASE_HOST = 'database_host';
+    const DATABASE_USER = 'database_user';
+    const DATABASE_PASS = 'database_pass';
+
     /**
      * @param string|null $databaseName
      *
@@ -18,9 +22,9 @@ abstract class AbstractFactory
         $db = static::instantiateKisdb();
         $db->enableDebug();
         $db->connect(
-            $params['database_host'],
-            $params['database_user'],
-            $params['database_pass'],
+            $params[static::DATABASE_HOST],
+            $params[static::DATABASE_USER],
+            $params[static::DATABASE_PASS],
             $databaseName
         );
 
@@ -75,5 +79,47 @@ abstract class AbstractFactory
     protected static function instantiateKisdb()
     {
         return Kisdb::getInstance();
+    }
+
+    /**
+     * @param string $dbName
+     * @param string $filename
+     *
+     * @return string
+     */
+    public static function createMysqlImportCommand($dbName, $filename)
+    {
+        $params = static::getParameters();
+
+        $command = '/usr/bin/mysql -h' . $params[static::DATABASE_HOST];
+        $command .= ' -u' . $params[static::DATABASE_USER];
+        if (!empty($params[static::DATABASE_PASS])) {
+            $command .= ' -p' . $params[static::DATABASE_PASS];
+        }
+        $command .= ' ' . $dbName;
+        $command .= ' < ' . $filename;
+
+        return $command;
+    }
+
+    /**
+     * @param string $dbName
+     * @param string $filename
+     *
+     * @return string
+     */
+    public static function createMysqlExportCommand($dbName, $filename)
+    {
+        $params = static::getParameters();
+
+        $command = '/usr/bin/mysqldump -h' . $params[static::DATABASE_HOST];
+        $command .= ' -u' . $params[static::DATABASE_USER];
+        if (!empty($params[static::DATABASE_PASS])) {
+            $command .= ' -p' . $params[static::DATABASE_PASS];
+        }
+        $command .= ' ' . $dbName;
+        $command .= ' > ' . $filename;
+
+        return $command;
     }
 }
