@@ -8,7 +8,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
 class ImportCommand extends Command
@@ -59,6 +58,7 @@ class ImportCommand extends Command
 
         if (!$process->isSuccessful()) {
             $output->writeln('<error>' . $process->getErrorOutput() . '</error>');
+
             return;
         }
 
