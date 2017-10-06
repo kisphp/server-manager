@@ -33,6 +33,12 @@ class CreateCommand extends Command
         ;
     }
 
+    /**
+     * @param \Symfony\Component\Console\Input\InputInterface $input
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     *
+     * @return void
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln('<info>' . self::DESCRIPTION . '</info>');
@@ -81,12 +87,17 @@ class CreateCommand extends Command
     {
         $query = sprintf("CREATE USER '%s'@'%%' IDENTIFIED BY '%s'", $user, $password);
         $this->db->query($query);
-
-        $this->displayError($output);
-
         if ($output->isVerbose()) {
             $output->writeln($query);
         }
+
+        $query = sprintf("CREATE USER '%s_ro'@'%%' IDENTIFIED BY '%s'", $user, $password);
+        $this->db->query($query);
+        if ($output->isVerbose()) {
+            $output->writeln($query);
+        }
+
+        $this->displayError($output);
     }
 
     /**
@@ -98,12 +109,17 @@ class CreateCommand extends Command
     {
         $query = sprintf("GRANT ALL PRIVILEGES ON %s.* TO '%s'@'%%'", $databaseName, $user);
         $this->db->query($query);
-
-        $this->displayError($output);
-
         if ($output->isVerbose()) {
             $output->writeln($query);
         }
+
+        $query = sprintf("GRANT SELECT, SHOW VIEW ON %s.* TO '%s_ro'@'%%'", $databaseName, $user);
+        $this->db->query($query);
+        if ($output->isVerbose()) {
+            $output->writeln($query);
+        }
+
+        $this->displayError($output);
     }
 
     /**
@@ -119,3 +135,6 @@ class CreateCommand extends Command
         }
     }
 }
+
+#CREATE USER 'medics_ro'@'%' IDENTIFIED BY 'medics'
+#GRANT SELECT, SHOW VIEW, PROCESS, REPLICATION CLIENT ON medics.* TO 'medics_ro'@'%'

@@ -54,6 +54,7 @@ class DropCommand extends Command
 
         $this->createDatabase($output, $dbName);
         $this->dropUser($output, $dbUser);
+        $this->dropPrivileges($output, $dbUser);
     }
 
     /**
@@ -78,7 +79,31 @@ class DropCommand extends Command
     {
         $query = sprintf("DROP USER '%s'@'%%'", $user);
         $this->db->query($query);
+        if ($output->isVerbose()) {
+            $output->writeln($query);
+        }
 
+        $query = sprintf("DROP USER '%s_ro'@'%%'", $user);
+        $this->db->query($query);
+        if ($output->isVerbose()) {
+            $output->writeln($query);
+        }
+    }
+
+    /**
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @param string $user
+     */
+    protected function dropPrivileges(OutputInterface $output, $user)
+    {
+        $query = sprintf("REVOKE ALL PRIVILEGES ON *.* FROM '%s'@'%%'", $user);
+        $this->db->query($query);
+        if ($output->isVerbose()) {
+            $output->writeln($query);
+        }
+
+        $query = sprintf("REVOKE ALL PRIVILEGES ON *.* FROM '%s_ro'@'%%'", $user);
+        $this->db->query($query);
         if ($output->isVerbose()) {
             $output->writeln($query);
         }
