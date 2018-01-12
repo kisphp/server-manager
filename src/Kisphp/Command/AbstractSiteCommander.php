@@ -143,4 +143,15 @@ abstract class AbstractSiteCommander extends Command
     {
         return self::NGINX_SITES_ENABLED . $directory;
     }
+
+    /**
+     * @param string $symlinkTarget
+     */
+    protected function removeFile($symlinkTarget)
+    {
+        if (is_file($symlinkTarget)) {
+            $this->success('Remove file: ' . $symlinkTarget);
+            unlink($symlinkTarget);
+        }
+    }
 }
