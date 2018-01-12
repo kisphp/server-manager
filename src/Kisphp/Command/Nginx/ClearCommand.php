@@ -3,7 +3,6 @@
 namespace Kisphp\Command\Nginx;
 
 use Kisphp\Command\AbstractSiteCommander;
-use Kisphp\Core\AbstractFactory;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
