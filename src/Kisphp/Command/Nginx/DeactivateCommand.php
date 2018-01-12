@@ -48,14 +48,7 @@ class DeactivateCommand extends AbstractSiteCommander
         $vhostTarget = $this->getNginxVhostTarget($directory);
         $symlinkTarget = $this->getNginxSymlinkTarget($directory);
 
-        if (is_file($symlinkTarget)) {
-            $this->success('Remove symlink: ' . $symlinkTarget);
-            unlink($symlinkTarget);
-        }
-
-        if (is_file($vhostTarget)) {
-            $this->success('Remove file: ' . $vhostTarget);
-            unlink($vhostTarget);
-        }
+        $this->removeFile($symlinkTarget);
+        $this->removeFile($vhostTarget);
     }
 }

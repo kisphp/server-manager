@@ -6,6 +6,7 @@ use Kisphp\Command\AbstractSiteCommander;
 use Kisphp\Core\AbstractFactory;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class ActivateCommand extends AbstractSiteCommander
@@ -16,6 +17,7 @@ class ActivateCommand extends AbstractSiteCommander
     {
         $this->setName(self::COMMAND)
             ->setDescription('Activate vhost')
+            ->addOption('no-restart', null, InputOption::VALUE_OPTIONAL, 'Skip server restart', false)
             ->addArgument('directory', InputArgument::REQUIRED, 'Set directory name')
             ->addArgument('public_directory', InputArgument::OPTIONAL, 'Set public directory inside project', 'web')
         ;
@@ -44,7 +46,9 @@ class ActivateCommand extends AbstractSiteCommander
             return false;
         }
 
-        $this->restartServer();
+        if ($input->getOption('no-restart') === false) {
+            $this->restartServer();
+        }
 
         $this->success('Domain ' . $this->input->getArgument('directory') . ' successfully activated');
     }
